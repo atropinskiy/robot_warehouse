@@ -9,7 +9,7 @@
     "start": "next start",
     "lint": "eslint",
     "lint:fsd": "steiger ./src",
-    "lint:all": "concurrently --names eslint,fsd --prefix \"[{index}:{name}]:\" --success all --kill-others-on-fail \"pnpm lint\" \"pnpm lint:fsd\""
+    "lint:all": "concurrently --names eslint,fsd --prefix \"[{index}:{name}]:\" --success all \"pnpm lint\" \"pnpm lint:fsd\""
   },
   "dependencies": {
     "next": "16.4.5",
