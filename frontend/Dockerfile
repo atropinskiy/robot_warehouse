@@ -1,5 +1,5 @@
 FROM node:26-alpine AS base
-RUN npm install --global pnpm@10.13.1
+RUN npm install --global pnpm@12.18.0
 WORKDIR /app/frontend
 COPY frontend/package.json frontend/pnpm-lock.yaml ./
 
