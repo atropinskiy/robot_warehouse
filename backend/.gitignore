@@ -1,3 +1,7 @@
+# lock files of other package managers (project uses pnpm)
+package-lock.json
+yarn.lock
+
 # compiled output
 /dist
 /node_modules
