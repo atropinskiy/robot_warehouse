@@ -31,6 +31,14 @@ sudo docker compose -f docker-compose.dev.yml up --build --watch
 
 Frontend доступен на `http://localhost` (порт 80). Nginx запускается после того, как frontend и backend проходят healthcheck.
 
+PostgreSQL запускается вместе с backend. Внутри Docker-сети backend подключается к базе `robots` по адресу `db:5432` с параметрами:
+
+```text
+DATABASE_URL=postgresql://user:password@db:5432/robots
+```
+
+Для разработки данные базы сохраняются в Docker volume `postgres_data` между перезапусками Compose.
+
 ## Переменные окружения
 
 ### **URL для серверных запросов (SSR) внутри Docker-сети:**
