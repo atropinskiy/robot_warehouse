@@ -62,14 +62,14 @@ services:
       - /app/frontend/.next
     environment:
       - NODE_ENV=development
-      - WATCHPACK_POLLING=true
+      # - WATCHPACK_POLLING=true
       # URL для серверных запросов (SSR) внутри Docker-сети:
       - INTERNAL_API_URL=${INTERNAL_API_URL:-http://backend:3000}
       # URL для клиентских запросов (браузер) — идёт через nginx:
       - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-/api}
-    depends_on:
-      backend:
-        condition: service_healthy
+    # depends_on:
+    #   backend:
+    #     condition: service_healthy
     healthcheck:
       test:
         - CMD
@@ -82,9 +82,9 @@ services:
       start_period: 45s
     develop:
       watch:
-        - path: ./frontend/app
+        - path: ./frontend/src
           action: sync
-          target: /app/frontend/app
+          target: /app/frontend/src
         - path: ./frontend/public
           action: sync
           target: /app/frontend/public
@@ -97,6 +97,8 @@ services:
         - path: ./frontend/package.json
           action: rebuild
         - path: ./frontend/pnpm-lock.yaml
+          action: rebuild
+        - path: ./frontend/pnpm-workspace.yaml
           action: rebuild
         - path: ./frontend/Dockerfile
           action: rebuild

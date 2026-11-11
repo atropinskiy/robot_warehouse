@@ -1,7 +1,7 @@
 FROM node:26-alpine AS base
 RUN npm install --global pnpm@12.18.0
 WORKDIR /app/frontend
-COPY frontend/package.json frontend/pnpm-lock.yaml backend/pnpm-workspace.yaml ./
+COPY frontend/package.json frontend/pnpm-lock.yaml frontend/pnpm-workspace.yaml ./
 
 RUN --mount=type=cache,id=pnpm-frontend,target=/root/.local/share/pnpm/store \
     pnpm install --frozen-lockfile
