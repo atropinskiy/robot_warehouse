@@ -1,12 +1,12 @@
-import { defineConfig } from 'steiger'
-import fsd from '@feature-sliced/steiger-plugin'
+import { defineConfig } from "steiger";
+import fsd from "@feature-sliced/steiger-plugin";
 
 export default defineConfig([
   ...fsd.configs.recommended,
   {
     rules: {
-      'fsd/insignificant-slice': 'warn',
-      'fsd/excessive-slicing': 'warn',
+      "fsd/insignificant-slice": "warn",
+      "fsd/excessive-slicing": "warn",
     },
   },
-])
+]);
