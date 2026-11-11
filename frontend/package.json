@@ -12,6 +12,7 @@
     "lint:all": "concurrently --names eslint,fsd --prefix \"[{index}:{name}]:\" --success all \"pnpm lint\" \"pnpm lint:fsd\""
   },
   "dependencies": {
+    "@sentry/nextjs": "^11.11.0",
     "next": "16.4.5",
     "react": "19.3.0",
     "react-dom": "19.3.0"
