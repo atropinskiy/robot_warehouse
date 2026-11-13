@@ -1,0 +1,134 @@
+services:
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: nginx-dev
+    ports:
+      - "127.0.0.1:${HTTP_PORT:-80}:80" # Единственная публичная точка входа
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      frontend:
+        condition: service_healthy
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: nestjs-backend-dev
+    ports:
+      - "4000:3000" # Оставляем прямой доступ для тестов
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=${DATABASE_URL:-postgresql://user:super_Str0n9_password@db:5432/robots}
+    depends_on:
+      db:
+        condition: service_healthy
+    command: pnpm run start:dev
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:3000/').then((r) => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    develop:
+      watch:
+        # NestJS перезагружает приложение при изменениях исходников.
+        - path: ./backend/src
+          action: sync
+          target: /app/backend/src
+          initial_sync: true
+        - path: ./backend/package.json
+          action: rebuild
+          initial_sync: true
+        - path: ./backend/pnpm-lock.yaml
+          action: rebuild
+          initial_sync: true
+        - path: ./backend/Dockerfile
+          action: rebuild
+          initial_sync: true
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    container_name: nextjs-frontend-dev
+    # Порты наружу НЕ пробрасываем — доступ только через nginx
+    expose:
+      - "3000"
+    volumes:
+      - /app/frontend/.next
+    environment:
+      - NODE_ENV=development
+      # - WATCHPACK_POLLING=true
+      # URL для серверных запросов (SSR) внутри Docker-сети:
+      - INTERNAL_API_URL=${INTERNAL_API_URL:-http://backend:3000}
+      # URL для клиентских запросов (браузер) — идёт через nginx:
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-/api}
+    # depends_on:
+    #   backend:
+    #     condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:3000/').then((r) => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 45s
+    develop:
+      watch:
+        - path: ./frontend/src
+          action: sync
+          target: /app/frontend/src
+          initial_sync: true
+        - path: ./frontend/public
+          action: sync
+          target: /app/frontend/public
+          initial_sync: true
+        - path: ./frontend/next.config.ts
+          action: sync+restart
+          target: /app/frontend/next.config.ts
+          initial_sync: true
+        - path: ./frontend/tsconfig.json
+          action: sync+restart
+          target: /app/frontend/tsconfig.json
+          initial_sync: true
+        - path: ./frontend/package.json
+          action: rebuild
+          initial_sync: true
+        - path: ./frontend/pnpm-lock.yaml
+          action: rebuild
+          initial_sync: true
+        - path: ./frontend/pnpm-workspace.yaml
+          action: rebuild
+          initial_sync: true
+        - path: ./frontend/Dockerfile
+          action: rebuild
+          initial_sync: true
+  db:
+    image: postgres:18-alpine
+    container_name: postgres-dev
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-super_Str0n9_password}
+      POSTGRES_DB: ${POSTGRES_DB:-robots}
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d robots"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
