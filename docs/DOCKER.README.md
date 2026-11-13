@@ -3,6 +3,9 @@
 Для одинаковой среды разработки на разных платформах установите Docker с поддержкой Docker Compose Watch:
 https://docs.docker.com/get-started/get-docker/
 
+Актуальная версия Docker engine: 29+
+Актгальная версия Compose: 5+
+
 ## Используемые команды пакетов
 
 В докерфайлах используются стандартные команды пакетов
@@ -40,6 +43,13 @@ DATABASE_URL=postgresql://user:password@db:5432/robots
 Для разработки данные базы сохраняются в Docker volume `postgres_data` между перезапусками Compose.
 
 ## Переменные окружения
+
+
+### Порт для экспозиции nginx, default: 80
+
+```shell
+HTTP_PORT=80 
+```
 
 ### **URL для серверных запросов (SSR) внутри Docker-сети:**
 
