@@ -1,15 +1,11 @@
 import { createRobotActor } from './create-robot-actor';
-import type {
-  CoordinateX,
-  CoordinateY,
-  RobotId,
-  RobotInput,
-} from './robot.types';
+import { makePosition } from './position';
+import type { RobotId, RobotInput } from './robot.types';
 
 describe('createRobotActor', () => {
   const input: RobotInput = {
     id: 'robot-1' as RobotId,
-    position: { x: 1 as CoordinateX, y: 1 as CoordinateY },
+    position: makePosition(1, 1),
   };
 
   let actor: ReturnType<typeof createRobotActor>;
@@ -54,7 +50,7 @@ describe('createRobotActor', () => {
   it('creates independent actors with their own initial contexts', () => {
     const otherInput: RobotInput = {
       id: 'robot-2' as RobotId,
-      position: { x: 2 as CoordinateX, y: 3 as CoordinateY },
+      position: makePosition(2, 3),
     };
     const otherActor = createRobotActor(otherInput);
 
