@@ -1,4 +1,11 @@
-import { and, setup } from 'xstate';
+import { and, assertEvent, assign, setup } from 'xstate';
+import { assignRoute, clearRoute, reachWaypoint } from './robot.actions';
+import {
+  hasWaypoint,
+  isOwnCommand,
+  routeCompletes,
+  routeContinues,
+} from './robot.guards';
 import type { RobotContext, RobotEvent, RobotInput } from './robot.types';
 
 export const robotMachine = setup({
@@ -8,17 +15,21 @@ export const robotMachine = setup({
     events: {} as RobotEvent,
   },
   guards: {
-    'command.own': () => false,
+    'command.own': isOwnCommand,
+    // TODO: Реализовать проверку маршрута с учётом планировки и покрыть интеграционным тестом без подмены guard.
     'route.isValid': () => false,
-    'route.hasWaypoint': () => false,
-    'route.continues': () => false,
-    'route.completes': () => false,
+    'route.hasWaypoint': hasWaypoint,
+    'route.continues': routeContinues,
+    'route.completes': routeCompletes,
   },
   actions: {
-    assignRoute: () => undefined,
-    reachWaypoint: () => undefined,
+    assignRoute: assign(({ context, event }) => {
+      assertEvent(event, 'robot.route.assign');
+      return assignRoute({ context, event });
+    }),
+    reachWaypoint: assign(reachWaypoint),
     notifyMoveCompleted: () => undefined,
-    clearRoute: () => undefined,
+    clearRoute: assign(clearRoute),
   },
 }).createMachine({
   id: 'robot',
