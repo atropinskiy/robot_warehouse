@@ -33,6 +33,39 @@ $ pnpm install
 
 ## Compile and run the project
 
+### Console route player
+
+```bash
+pnpm run play:route
+
+# 1000 ms per cell
+pnpm run play:route 1000
+```
+
+The demo starts one backend robot at `(1,1)` on an empty 10×10 field and plays
+`(2,1) → (2,2) → (1,2) → (1,1)`. Each move takes 500 ms by default; the optional
+command argument sets the duration per cell in milliseconds. It must be an integer
+from 1 to 2147483647. Frames come directly
+from the actor subscription; no server, WebSocket or frontend is required.
+The initial frame, route assignment, move starts and arrivals are printed in order.
+Each frame includes the complete actor context as `context=<JSON>` and the next
+event the player will send as `next=<JSON>`. The last frame has `next=null`.
+`timing=<JSON>` shows `cellDurationMs` and `nextDelayMs`: arrival waits for the
+configured duration, route assignment and movement start are immediate, and the
+last frame has no scheduled delay (`null`). This is player timing, separate from
+the robot context.
+After one complete route the final `idle` frame is preserved and the process exits.
+
+Change the `route` array in `src/presentation/console/play-route.demo.ts` to try
+another sequence of coordinates. `playRoute` accepts an actor, a route array,
+`cellDurationMs`, a frame writer and a wait function that receives this duration.
+
+Route validation is temporarily bypassed only for this demo; the default machine
+still rejects route assignment until `route.isValid` is implemented. Use adjacent
+coordinates within `0..9` when editing the demo route.
+
+### Backend server
+
 ```bash
 # development
 $ pnpm run start
