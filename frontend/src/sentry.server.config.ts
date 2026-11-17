@@ -18,6 +18,7 @@ Sentry.init({
       inputs: false,
       outputs: false,
     },
+    // Ограничиваем данные запросов, а не саму инструментацию БД.
     databaseQueryData: false,
     graphQL: {
       document: false,

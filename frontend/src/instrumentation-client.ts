@@ -11,7 +11,12 @@ Sentry.init({
   dataCollection: {
     userInfo: false,
     cookies: false,
-    httpHeaders: false,
+    httpHeaders: {
+      request: {
+        allow: ["User-Agent"],
+      },
+      response: false,
+    },
     httpBodies: [],
     urlQueryParams: false,
     genAI: {
