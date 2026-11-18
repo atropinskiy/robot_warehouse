@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Main Menu Mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap&subset=cyrillic" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0F1419; --surface: #161D26; --surface-2: #1E2732; --border: #2A3542;
+    --text: #E6EDF3; --muted: #8B98A8; --dim: #5E6B7A;
+    --accent: #FF8A1F; --accent-ink: #1A0F00; --teal: #2EC4B6;
+    --st-free: #3DDC84; --st-busy: #4C9AFF; --st-wait: #FFC53D; --st-broken: #FF5A5F;
+    --font-display: 'Unbounded', sans-serif;
+    --font-sans: 'Inter', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body { background: var(--bg); color: var(--text); font: 400 14px/1.5 var(--font-sans); }
+  .app { display: grid; grid-template-columns: 248px 1fr; min-height: 100vh; }
+
+  /* ---------- Sidebar ---------- */
+  .side { background: var(--surface); border-right: 1px solid var(--border); padding: 20px 14px; display: flex; flex-direction: column; gap: 4px; }
+  .logo { display: flex; align-items: center; gap: 10px; padding: 4px 8px 22px; }
+  .logo img { width: 36px; height: 36px; }
+  .logo b { font: 700 13px/1.15 var(--font-display); letter-spacing: .04em; text-transform: uppercase; }
+  .logo b span { color: var(--accent); display: block; }
+  .nav-label { font: 500 11px var(--font-sans); text-transform: uppercase; letter-spacing: .08em; color: var(--dim); padding: 14px 10px 6px; }
+  .nav a { display: flex; align-items: center; gap: 12px; padding: 9px 10px; border-radius: 8px; color: var(--muted); text-decoration: none; font-weight: 500; }
+  .nav a:hover { background: var(--surface-2); color: var(--text); }
+  .nav a.active { background: rgba(255,138,31,.12); color: var(--accent); }
+  .nav svg { width: 18px; height: 18px; flex: none; }
+  .nav .count { margin-left: auto; font: 500 11px var(--font-mono); background: var(--surface-2); color: var(--muted); border-radius: 6px; padding: 1px 6px; }
+  .side .spacer { flex: 1; }
+  .me { display: flex; align-items: center; gap: 10px; padding: 10px; border: 1px solid var(--border); border-radius: 10px; margin-top: 10px; }
+  .avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #4C9AFF, #2EC4B6); display: grid; place-items: center; font: 700 12px var(--font-sans); color: #0F1419; }
+  .me small { display: block; color: var(--muted); font-size: 12px; }
+
+  /* ---------- Main ---------- */
+  .main { padding: 22px 32px 40px; min-width: 0; }
+  .top { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
+  .search { flex: 1; max-width: 420px; display: flex; align-items: center; gap: 8px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 9px 12px; color: var(--dim); }
+  .search kbd { margin-left: auto; font: 500 11px var(--font-mono); border: 1px solid var(--border); border-radius: 5px; padding: 0 5px; }
+  .top .grow { flex: 1; }
+  .btn { display: inline-flex; align-items: center; gap: 8px; border-radius: 10px; padding: 9px 14px; font: 600 14px var(--font-sans); border: 1px solid var(--border); background: var(--surface); color: var(--text); cursor: pointer; }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  .btn.ai { border-color: rgba(46,196,182,.45); color: var(--teal); }
+  .btn svg { width: 16px; height: 16px; }
+  .icon-btn { width: 38px; height: 38px; padding: 0; justify-content: center; position: relative; }
+  .icon-btn .dot { position: absolute; top: 8px; right: 9px; width: 7px; height: 7px; border-radius: 50%; background: var(--st-broken); border: 2px solid var(--surface); }
+
+  h1 { font: 700 30px/1.15 var(--font-display); margin: 0 0 6px; letter-spacing: -.01em; }
+  .sub { color: var(--muted); margin: 0 0 24px; font-size: 15px; }
+  h2 { font: 500 17px/1.3 var(--font-display); margin: 0; }
+  .sec-head { display: flex; align-items: baseline; justify-content: space-between; margin: 30px 0 14px; }
+  .sec-head a { color: var(--muted); text-decoration: none; font-weight: 500; }
+
+  .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+  .stat { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 16px 18px; }
+  .stat .k { color: var(--muted); font-size: 13px; font-weight: 500; }
+  .stat .v { font: 500 30px/1.2 var(--font-mono); margin-top: 6px; font-variant-numeric: tabular-nums; }
+  .stat .v small { font-size: 16px; color: var(--dim); }
+  .stat .d { font-size: 12px; color: var(--st-free); margin-top: 2px; }
+
+  .layout { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 24px; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; transition: border-color .15s, transform .15s; cursor: pointer; }
+  .card:hover { border-color: #3B4858; transform: translateY(-2px); }
+  .map { aspect-ratio: 1.6; background: #121920; position: relative; border-bottom: 1px solid var(--border); overflow: hidden; }
+  .map canvas { width: 100%; height: 100%; display: block; }
+  .map .badge { position: absolute; top: 10px; left: 10px; }
+  .card .body { padding: 14px 16px 16px; }
+  .card .title { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .card h3 { margin: 0; font: 600 16px var(--font-sans); }
+  .role { font: 500 11px var(--font-sans); color: var(--muted); border: 1px solid var(--border); border-radius: 6px; padding: 1px 7px; white-space: nowrap; }
+  .card .meta { display: flex; gap: 16px; margin-top: 10px; color: var(--muted); font-size: 13px; }
+  .card .meta b { font: 500 13px var(--font-mono); color: var(--text); }
+  .badge { display: inline-flex; align-items: center; gap: 6px; font: 600 12px var(--font-sans); padding: 3px 9px; border-radius: 999px; background: rgba(15,20,25,.85); backdrop-filter: blur(4px); }
+  .badge i { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+  .badge.run { color: var(--st-free); } .badge.run i { box-shadow: 0 0 0 3px rgba(61,220,132,.25); animation: pulse 1.6s infinite; }
+  .badge.pause { color: var(--st-wait); } .badge.stop { color: var(--muted); }
+  @keyframes pulse { 50% { box-shadow: 0 0 0 6px rgba(61,220,132,0); } }
+  .card.new { display: grid; place-items: center; border-style: dashed; min-height: 260px; color: var(--muted); text-align: center; }
+  .card.new .plus { width: 44px; height: 44px; border-radius: 12px; background: var(--surface-2); display: grid; place-items: center; margin: 0 auto 10px; color: var(--accent); font: 400 26px var(--font-sans); }
+
+  .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 16px; }
+  .panel + .panel { margin-top: 14px; }
+  .panel h2 { margin-bottom: 12px; font-size: 15px; }
+  .bot { display: flex; align-items: center; gap: 12px; padding: 7px 0; }
+  .bot + .bot { border-top: 1px solid var(--border); }
+  .bot img { width: 40px; height: 40px; background: var(--surface-2); border-radius: 8px; }
+  .bot .n { font-weight: 600; }
+  .bot .n code { font: 400 12px var(--font-mono); color: var(--dim); margin-left: 6px; }
+  .bot small { display: block; color: var(--muted); font-size: 12px; }
+  .chip { margin-left: auto; font: 600 11px var(--font-sans); padding: 2px 8px; border-radius: 6px; white-space: nowrap; }
+  .chip.free { color: var(--st-free); background: rgba(61,220,132,.12); }
+  .chip.busy { color: var(--st-busy); background: rgba(76,154,255,.12); }
+  .chip.wait { color: var(--st-wait); background: rgba(255,197,61,.12); }
+  .chip.broken { color: var(--st-broken); background: rgba(255,90,95,.12); }
+  .log { list-style: none; margin: 0; padding: 0; font-size: 13px; }
+  .log li { display: grid; grid-template-columns: 62px 1fr; gap: 8px; padding: 6px 0; }
+  .log time { font: 400 12px var(--font-mono); color: var(--dim); padding-top: 1px; }
+  .log b { font-weight: 600; }
+  .log .err { color: var(--st-broken); }
+  .log .ok { color: var(--st-free); }
+
+  @media (max-width: 1180px) { .layout { grid-template-columns: 1fr; } }
+  @media (max-width: 860px) {
+    .app { grid-template-columns: 1fr; }
+    .side { display: none; }
+    .main { padding: 16px; }
+    .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .search, .top .hide-sm { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="side">
+    <div class="logo">
+      <img src="robots/mule/mule_down.svg" alt="">
+      <b>Robot<span>Warehouse</span></b>
+    </div>
+    <nav class="nav">
+      <a href="#" class="active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V9l9-6 9 6v12"/><path d="M7 21v-8h10v8"/><path d="M7 17h10"/></svg>
+        Склады <span class="count">3</span>
+      </a>
+      <a href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M7 13l3-3 2 2 4-4"/></svg>
+        Диспетчерская
+      </a>
+      <a href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>
+        Редактор карты
+      </a>
+      <a href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 6l1 1 2-2M4 12l1 1 2-2M4 18l1 1 2-2"/></svg>
+        Задания <span class="count">14</span>
+      </a>
+      <a href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        История
+      </a>
+      <div class="nav-label">Команда</div>
+      <a href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5"/><path d="M16 4.5a3.5 3.5 0 010 7M18 14.8c1.8.7 3 2.4 3.5 5.2"/></svg>
+        Участники
+      </a>
+      <a href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v12H8l-4 4z"/><path d="M9 10h.01M12 10h.01M15 10h.01"/></svg>
+        AI-помощник
+      </a>
+    </nav>
+    <div class="spacer"></div>
+    <nav class="nav">
+      <a href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.8-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 01-4 0v-.1a1.7 1.7 0 00-1.1-1.5 1.7 1.7 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.8 1.7 1.7 0 00-1.5-1H3a2 2 0 010-4h.1a1.7 1.7 0 001.5-1.1 1.7 1.7 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.8.3H9a1.7 1.7 0 001-1.5V3a2 2 0 014 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.8V9a1.7 1.7 0 001.5 1H21a2 2 0 010 4h-.1a1.7 1.7 0 00-1.5 1z"/></svg>
+        Настройки
+      </a>
+    </nav>
+    <div class="me">
+      <div class="avatar">ОП</div>
+      <div>Оператор<small>operator@example.com</small></div>
+    </div>
+  </aside>
+
+  <!-- ================= MAIN ================= -->
+  <main class="main">
+    <div class="top">
+      <div class="search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+        Поиск склада, робота, задания…
+        <kbd>Ctrl K</kbd>
+      </div>
+      <div class="grow"></div>
+      <button class="btn ai hide-sm">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 4.6L18.5 9.5l-4.6 1.9L12 16l-1.9-4.6L5.5 9.5l4.6-1.9z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg>
+        Задание из текста
+      </button>
+      <button class="btn icon-btn" aria-label="Уведомления">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0112 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.9 1.9 0 003.4 0"/></svg>
+        <span class="dot"></span>
+      </button>
+      <button class="btn primary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        Новый склад
+      </button>
+    </div>
+
+    <h1>Главное меню</h1>
+    <p class="sub">Сводка по вашим складам и роботам в реальном времени.</p>
+
+    <div class="stats">
+      <div class="stat"><div class="k">Активные склады</div><div class="v">2<small>/3</small></div><div class="d">1 на паузе</div></div>
+      <div class="stat"><div class="k">Роботов занято</div><div class="v">7<small>/11</small></div><div class="d">64% загрузки</div></div>
+      <div class="stat"><div class="k">В очереди</div><div class="v">14</div><div class="d" style="color:var(--muted)">≈ 6 мин до разбора</div></div>
+      <div class="stat"><div class="k">Выполнено сегодня</div><div class="v">128</div><div class="d">+18% к вчера</div></div>
+    </div>
+
+    <div class="layout">
+      <section>
+        <div class="sec-head"><h2>Мои склады</h2><a href="#">Все склады →</a></div>
+        <div class="cards">
+          <article class="card">
+            <div class="map"><canvas data-seed="3" data-bots="mule,lifter,picker,mule"></canvas><span class="badge run"><i></i>Симуляция идёт</span></div>
+            <div class="body">
+              <div class="title"><h3>Центральный склад</h3><span class="role">Владелец</span></div>
+              <div class="meta"><span><b>4</b> робота</span><span><b>9</b> в очереди</span><span><b>20×20</b></span></div>
+            </div>
+          </article>
+          <article class="card">
+            <div class="map"><canvas data-seed="11" data-bots="picker,mule,lifter"></canvas><span class="badge pause"><i></i>Пауза</span></div>
+            <div class="body">
+              <div class="title"><h3>Склад «Север»</h3><span class="role">Владелец</span></div>
+              <div class="meta"><span><b>3</b> робота</span><span><b>5</b> в очереди</span><span><b>20×20</b></span></div>
+            </div>
+          </article>
+          <article class="card">
+            <div class="map"><canvas data-seed="27" data-bots="lifter,mule"></canvas><span class="badge stop"><i></i>Остановлен</span></div>
+            <div class="body">
+              <div class="title"><h3>Сортировочный хаб</h3><span class="role">Наблюдатель</span></div>
+              <div class="meta"><span><b>2</b> робота</span><span><b>0</b> в очереди</span><span><b>20×20</b></span></div>
+            </div>
+          </article>
+          <article class="card new">
+            <div><div class="plus">+</div><b style="color:var(--text)">Создать склад</b><br>Пустая карта 20×20</div>
+          </article>
+        </div>
+      </section>
+
+      <aside>
+        <div class="sec-head"><h2>Сейчас</h2><a href="#">Диспетчерская →</a></div>
+        <div class="panel">
+          <h2>Роботы · Центральный</h2>
+          <div class="bot"><img src="robots/mule/mule_right.svg" alt=""><div><div class="n">Мул-01<code>(4, 7)</code></div><small>Приёмка → Упаковка</small></div><span class="chip busy">В задании</span></div>
+          <div class="bot"><img src="robots/lifter/lifter_down.svg" alt=""><div><div class="n">Штабелёр-02<code>(12, 3)</code></div><small>Путь занят, ждёт</small></div><span class="chip wait">Ожидает</span></div>
+          <div class="bot"><img src="robots/picker/picker_left.svg" alt=""><div><div class="n">Сборщик-03<code>(9, 15)</code></div><small>Без задания</small></div><span class="chip free">Свободен</span></div>
+          <div class="bot"><img src="robots/mule/mule_up.svg" alt=""><div><div class="n">Мул-04<code>(17, 11)</code></div><small>Остановлен вручную</small></div><span class="chip broken">Неисправен</span></div>
+        </div>
+        <div class="panel">
+          <h2>Журнал событий</h2>
+          <ul class="log">
+            <li><time>14:02:41</time><span class="ok">Доставка завершена · <b>#T-318</b></span></li>
+            <li><time>14:02:37</time><span><b>Мул-01</b> получил груз на «Приёмка-1»</span></li>
+            <li><time>14:02:20</time><span><b>Штабелёр-02</b> назначен на <b>#T-319</b></span></li>
+            <li><time>14:01:58</time><span class="err">Маршрут не найден: «Упаковка-2» окружена препятствиями</span></li>
+            <li><time>14:01:12</time><span>Создано задание <b>#T-320</b> (AI)</span></li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </main>
+</div>
+
+<script>
+  // Mini-map previews: 20x20 grid with obstacles, stations and robot sprites.
+  const N = 20;
+  const sprites = {};
+  ['mule', 'lifter', 'picker'].forEach(n => ['up', 'down', 'left', 'right'].forEach(d => {
+    const img = new Image(); img.src = `robots/${n}/${n}_${d}.svg`; sprites[`${n}_${d}`] = img;
+  }));
+  function rng(seed) { return () => (seed = (seed * 16807) % 2147483647) / 2147483647; }
+  function draw(cv) {
+    const r = rng(+cv.dataset.seed);
+    const bots = cv.dataset.bots.split(',');
+    const W = cv.clientWidth, H = cv.clientHeight, dpr = devicePixelRatio || 1;
+    cv.width = W * dpr; cv.height = H * dpr;
+    const ctx = cv.getContext('2d'); ctx.scale(dpr, dpr);
+    const cell = Math.ceil(W / N); const rows = Math.ceil(H / cell);
+    ctx.fillStyle = '#121920'; ctx.fillRect(0, 0, W, H);
+    ctx.strokeStyle = '#1E2732'; ctx.lineWidth = 1;
+    for (let i = 0; i <= N; i++) { ctx.beginPath(); ctx.moveTo(i * cell + .5, 0); ctx.lineTo(i * cell + .5, H); ctx.stroke(); }
+    for (let j = 0; j <= rows; j++) { ctx.beginPath(); ctx.moveTo(0, j * cell + .5); ctx.lineTo(W, j * cell + .5); ctx.stroke(); }
+    // shelving rows (obstacles)
+    ctx.fillStyle = '#2F3B4A';
+    for (let x = 3; x < N - 2; x += 4) {
+      const y0 = 2 + Math.floor(r() * 2), len = 4 + Math.floor(r() * (rows - 7));
+      ctx.fillRect(x * cell + 1, y0 * cell + 1, cell * 2 - 2, len * cell - 2);
+    }
+    // stations
+    const st = [['#2EC4B6', 0, 1 + Math.floor(r() * (rows - 3))], ['#FF8A1F', N - 1, 1 + Math.floor(r() * (rows - 3))], ['#2EC4B6', 0, rows - 2]];
+    for (const [c, x, y] of st) { ctx.fillStyle = c; ctx.globalAlpha = .3; ctx.fillRect(x * cell, y * cell, cell, cell); ctx.globalAlpha = 1; ctx.strokeStyle = c; ctx.strokeRect(x * cell + 1.5, y * cell + 1.5, cell - 3, cell - 3); }
+    // robots in aisles
+    const dirs = ['up', 'down', 'left', 'right'];
+    bots.forEach((b, i) => {
+      const x = 1 + 4 * (i % 4) + (i % 2), y = 1 + Math.floor(r() * (rows - 2));
+      const img = sprites[`${b}_${dirs[Math.floor(r() * 4)]}`];
+      const paint = () => ctx.drawImage(img, x * cell - cell * .25, y * cell - cell * .25, cell * 1.5, cell * 1.5);
+      img.complete ? paint() : img.addEventListener('load', paint, { once: true });
+    });
+  }
+  const all = () => document.querySelectorAll('.map canvas').forEach(draw);
+  addEventListener('load', all); addEventListener('resize', all);
+</script>
+</body>
+</html>
