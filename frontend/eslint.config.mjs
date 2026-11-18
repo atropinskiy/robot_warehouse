@@ -15,6 +15,17 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
   ]),
   prettierConfig,
+  {
+    rules: {
+      "no-warning-comments": [
+        "warn",
+        {
+          terms: ["todo"],
+          location: "anywhere",
+        },
+      ],
+    },
+  },
 ]);
 
 export default eslintConfig;
