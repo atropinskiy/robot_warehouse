@@ -4,6 +4,7 @@ node_modules/
 out/
 build/
 dist/
+storybook-static/
 coverage/
 next-env.d.ts
 pnpm-lock.yaml
