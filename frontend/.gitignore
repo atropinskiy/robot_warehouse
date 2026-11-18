@@ -1,0 +1,58 @@
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.pnpm-store/
+
+# testing (vitest / RTL / playwright)
+/coverage
+/test-results/
+/playwright-report/
+/playwright/.cache/
+
+# next.js
+/.next/
+/out/
+next-env.d.ts
+
+# production
+/build
+/dist
+
+# storybook
+/storybook-static
+*storybook.log
+
+# sentry / glitchtip
+.sentryclirc
+.env.sentry-build-plugin
+
+# env files: local secrets never committed, example is committed
+.env
+.env*.local
+.env.development
+.env.production
+.env.test
+!.env.example
+
+# typescript
+*.tsbuildinfo
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# editors / OS
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+*.swp
+.DS_Store
+Thumbs.db
+
+# misc
+*.pem
+.vercel
