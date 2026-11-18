@@ -9,16 +9,23 @@ async function bootstrap() {
   const logger = new Logger('Bootstrap');
   const prisma = app.get(DbService);
   const config = app.get(ConfigService);
-  // const cookieParser = require('cookie-parser');
+  const cookieParser = require('cookie-parser');
 
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
   app.enableCors({
     origin: config.get<string>('CORS_ORIGIN') || 'http://localhost:5173',
     credentials: true,
   });
-  // app.use(cookieParser());
+  app.use(cookieParser());
   app.enableShutdownHooks();
   await prisma.enableShutdownHooks(app);
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      transform: true,
+      forbidNonWhitelisted: true,
+    }),
+  );
 
   const port = config.get<number>('PORT', 3000);
   await app.listen(port);
