@@ -3,12 +3,12 @@
 import { ApiProperty } from "@nestjs/swagger";
 
 export class RobotDto {
-
-    @ApiProperty({
-        description: "Имя робота",
-        maximum: 20,
-        minimum: 1
-    })
+    // nfr vj;yj lj,fdbnm j
+    // @ApiProperty({
+    //     description: "Имя робота",
+    //     maximum: 20,
+    //     minimum: 1
+    // })
     // обязательные параметры `!` нужен что бы избежать TS ошибок
     name!: string;
 
@@ -16,9 +16,9 @@ export class RobotDto {
     role!: 'lifter' | 'runner'
 
     // необязательные параметры `?`
-    @ApiProperty({
-        description: 'заряд батареи',
-        default: 99
-    })
+    // @ApiProperty({
+    //     description: 'заряд батареи',
+    //     default: 99
+    // })
     batery?: number = 99;
 }
