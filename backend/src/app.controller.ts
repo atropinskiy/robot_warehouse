@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { AppService } from './app.service';
-import { RobotDto } from './dto-for-swagge-example/robots-example.dto';
+import { RobotDto } from './dto-for-swagger-example/robots-example.dto';
 
 @Controller()
 export class AppController {

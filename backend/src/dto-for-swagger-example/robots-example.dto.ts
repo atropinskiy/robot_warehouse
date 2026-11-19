@@ -1,9 +1,10 @@
 // ЭТОТ файл только для примера его можно смело удалять
+// TODO удалить в продакшене
 
 import { ApiProperty } from "@nestjs/swagger";
 
 export class RobotDto {
-    // nfr vj;yj lj,fdbnm j
+    // Для описания элементов в swagger
     // @ApiProperty({
     //     description: "Имя робота",
     //     maximum: 20,

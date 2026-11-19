@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 // Пример -------------------
 // см robots-example.dto.ts
-import { RobotDto } from './dto-for-swagge-example/robots-example.dto';
+import { RobotDto } from './dto-for-swagger-example/robots-example.dto';
 // --------------------------------------
 
 @Injectable()
