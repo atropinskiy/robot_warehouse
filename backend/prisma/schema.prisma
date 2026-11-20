@@ -31,3 +31,27 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+// Карта
+model Map {
+  id        Int       @id @default(autoincrement())
+  name      String
+  image     String?
+  desc      String?
+  width     Int
+  heigth    Int
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  field     MapField[]
+}
+
+model MapField {
+  id          Int         @id @default(autoincrement())
+  mapId       Int
+  x           Int
+  y           Int
+  status      String
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  Map         Map         @relation(fields: [mapId], references: [id], onDelete: Cascade)
+}
