@@ -13,7 +13,6 @@ export interface PingPayload {
  */
 export interface PongPayload {
   timestamp: number;
-  latencyMs?: number;
   message?: string;
 }
 
