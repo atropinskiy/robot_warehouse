@@ -60,10 +60,7 @@ export class AuthController {
 
     this.setAuthCookies(res, result.access_token, result.refresh_token);
 
-    return {
-      user: result.user,
-      message: 'Регистрация успешна',
-    };
+    return result.user;
   }
 
   @Post('login')
@@ -90,10 +87,7 @@ export class AuthController {
 
     this.setAuthCookies(res, result.access_token, result.refresh_token);
 
-    return {
-      user: result.user,
-      message: 'Вход выполнен успешно',
-    };
+    return result.user;
   }
 
   @Post('refresh')
@@ -117,10 +111,7 @@ export class AuthController {
 
     this.setAuthCookies(res, result.access_token, result.refresh_token);
 
-    return {
-      user: result.user,
-      message: 'Токены обновлены',
-    };
+    return result.user;
   }
 
   // Guard снят: logout должен работать и после истечения access-токена,
