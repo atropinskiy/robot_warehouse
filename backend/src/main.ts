@@ -1,5 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { Logger, ValidationPipe } from '@nestjs/common';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { apiReference } from '@scalar/nestjs-api-reference';
 import { AppModule } from './app.module';
 import { DbService } from './db/db.service';
 import { ConfigService } from '@nestjs/config';
@@ -26,6 +28,25 @@ async function bootstrap() {
       forbidNonWhitelisted: true,
     }),
   );
+
+  // --- OpenAPI / Swagger ---
+  const swaggerConfig = new DocumentBuilder()
+    .setTitle('Robot Warehouse API')
+    .setDescription('API платформы управления роботами на симулируемом складе')
+    .setVersion('0.1.0')
+    .addTag('auth', 'Аутентификация и пользователи')
+    .addCookieAuth('access_token')
+    .build();
+
+  const document = SwaggerModule.createDocument(app, swaggerConfig);
+
+  // Swagger UI: /docs (через nginx: /api/docs)
+  SwaggerModule.setup('docs', app, document, {
+    swaggerOptions: { persistAuthorization: true },
+  });
+
+  // Scalar API reference: /docs/scalar (через nginx: /api/docs/scalar)
+  app.use('/docs/scalar', apiReference({ content: document }));
 
   const port = config.get<number>('PORT', 3000);
   await app.listen(port);

@@ -23,6 +23,11 @@ services:
     environment:
       - NODE_ENV=development
       - DATABASE_URL=${DATABASE_URL:-postgresql://user:super_Str0n9_password@db:5432/robots}
+      - PORT=3000
+      - JWT_SECRET=${JWT_SECRET:-dev-jwt-secret-change-me}
+      - JWT_REFRESH_SECRET=${JWT_REFRESH_SECRET:-dev-jwt-refresh-secret-change-me}
+      - FRONTEND_URL=${FRONTEND_URL:-http://localhost:3000}
+      - CORS_ORIGIN=${CORS_ORIGIN:-http://localhost:3000}
     depends_on:
       db:
         condition: service_healthy
@@ -43,16 +48,12 @@ services:
         - path: ./backend/src
           action: sync
           target: /app/backend/src
-          initial_sync: true
         - path: ./backend/package.json
           action: rebuild
-          initial_sync: true
         - path: ./backend/pnpm-lock.yaml
           action: rebuild
-          initial_sync: true
         - path: ./backend/Dockerfile
           action: rebuild
-          initial_sync: true
 
   frontend:
     build:
@@ -89,31 +90,23 @@ services:
         - path: ./frontend/src
           action: sync
           target: /app/frontend/src
-          initial_sync: true
         - path: ./frontend/public
           action: sync
           target: /app/frontend/public
-          initial_sync: true
         - path: ./frontend/next.config.ts
           action: sync+restart
           target: /app/frontend/next.config.ts
-          initial_sync: true
         - path: ./frontend/tsconfig.json
           action: sync+restart
           target: /app/frontend/tsconfig.json
-          initial_sync: true
         - path: ./frontend/package.json
           action: rebuild
-          initial_sync: true
         - path: ./frontend/pnpm-lock.yaml
           action: rebuild
-          initial_sync: true
         - path: ./frontend/pnpm-workspace.yaml
           action: rebuild
-          initial_sync: true
         - path: ./frontend/Dockerfile
           action: rebuild
-          initial_sync: true
   db:
     image: postgres:18-alpine
     container_name: postgres-dev
