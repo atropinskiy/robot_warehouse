@@ -153,3 +153,6 @@ vite.config.ts.timestamp-*
 
 # Turbo Repo
 .turbo
+
+# AI agents
+AGENTS.md
