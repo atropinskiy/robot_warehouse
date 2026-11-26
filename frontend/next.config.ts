@@ -3,8 +3,11 @@ import { withSentryConfig } from "@sentry/nextjs/config";
 
 const nextConfig: NextConfig = {
   /* config options here */
-  cacheComponents: true,
-  partialPrefetching: true,
+  // Cache Components / Partial Prefetching отключены: instant-navigation
+  // валидация ругается на сегменты, которые рендерятся только после
+  // проверки сессии на клиенте (auth-гейты в layout'ах).
+  cacheComponents: false,
+  partialPrefetching: false,
   turbopack: {
     rules: {
       "*.css": {

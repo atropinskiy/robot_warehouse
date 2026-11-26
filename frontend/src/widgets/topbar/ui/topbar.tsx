@@ -7,6 +7,7 @@ import {
   SearchIcon,
 } from "@/shared/icons";
 import { Button, HStack, Input } from "@/shared/ui";
+import { UserMenu } from "./user-menu";
 
 export function Topbar() {
   return (
@@ -62,6 +63,8 @@ export function Topbar() {
           Новый склад
         </Link>
       </Button>
+
+      <UserMenu />
     </HStack>
   );
 }
