@@ -9,5 +9,6 @@
 | [`ui/`](./ui)       | `Button`, `Card`, `Badge`, `Input`, `Label`, `Heading`, `Text`, `HStack` и `VStack`. Импортируй из `@/shared/ui`. |
 | [`icons/`](./icons) | Иконки навигации и действий на базе Lucide. Импортируй из `@/shared/icons`.                                       |
 | [`lib/`](./lib)     | `cn` для объединения CSS-классов.                                                                                 |
+| [`api/`](./api)     | `request` и `ApiError` для запросов к backend. Импортируй из `@/shared/api`.                                      |
 
 Спрайты роботов лежат в [`public/robots`](../../public/robots). Их тоже можно посмотреть в Storybook.
