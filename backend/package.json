@@ -37,6 +37,8 @@
     "@nestjs/jwt": "^12.0.4",
     "@nestjs/passport": "^12.0.1",
     "@nestjs/platform-express": "^11.0.1",
+    "@nestjs/swagger": "^12.1.2",
+    "@scalar/nestjs-api-reference": "^1.2.37",
     "@nestjs/terminus": "^12.1.0",
     "@prisma/adapter-pg": "^7.10.1",
     "@prisma/client": "^7.10.1",
