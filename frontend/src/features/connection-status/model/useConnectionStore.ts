@@ -1,11 +1,7 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 
 export type ConnectionStatus =
-  | 'disconnected'
-  | 'connecting'
-  | 'connected'
-  | 'reconnecting'
-  | 'error';
+  "disconnected" | "connecting" | "connected" | "reconnecting" | "error";
 
 interface ConnectionState {
   status: ConnectionStatus;
@@ -27,7 +23,7 @@ interface ConnectionActions {
 export type ConnectionStore = ConnectionState & ConnectionActions;
 
 const initialState: ConnectionState = {
-  status: 'disconnected',
+  status: "disconnected",
   lastError: null,
   lastPingLatencyMs: null,
   pingError: null,
@@ -42,7 +38,8 @@ export const useConnectionStore = create<ConnectionStore>((set) => ({
 
   setLastError: (lastError) => set({ lastError }),
 
-  setPingLatency: (lastPingLatencyMs) => set({ lastPingLatencyMs, pingError: null }),
+  setPingLatency: (lastPingLatencyMs) =>
+    set({ lastPingLatencyMs, pingError: null }),
 
   setPingError: (pingError) => set({ pingError, lastPingLatencyMs: null }),
 
@@ -57,7 +54,7 @@ export const useConnectionStatus = (): ConnectionStatus =>
   useConnectionStore((state) => state.status);
 
 export const useIsConnected = (): boolean =>
-  useConnectionStore((state) => state.status === 'connected');
+  useConnectionStore((state) => state.status === "connected");
 
 export const useConnectionError = (): string | null =>
   useConnectionStore((state) => state.lastError);

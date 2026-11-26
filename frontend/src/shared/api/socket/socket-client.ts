@@ -1,8 +1,8 @@
-import { io } from 'socket.io-client';
-import { z } from 'zod';
+import { io } from "socket.io-client";
+import { z } from "zod";
 
-import { SOCKET_EVENTS } from './events';
-import type { PingPayload, PongPayload, TypedSocket } from './types';
+import { SOCKET_EVENTS } from "./events";
+import type { PingPayload, PongPayload, TypedSocket } from "./types";
 
 const PING_TIMEOUT_MS = 5000;
 
@@ -10,12 +10,12 @@ const PING_TIMEOUT_MS = 5000;
  * Получение базового URL для подключения WebSocket
  */
 const getSocketUrl = (): string => {
-  if (typeof window === 'undefined') {
-    return 'http://localhost';
+  if (typeof window === "undefined") {
+    return "http://localhost";
   }
   return (
     process.env.NEXT_PUBLIC_WS_URL ||
-    process.env.NEXT_PUBLIC_API_URL?.replace(/\/api\/?$/, '') ||
+    process.env.NEXT_PUBLIC_API_URL?.replace(/\/api\/?$/, "") ||
     window.location.origin
   );
 };
@@ -29,7 +29,7 @@ export const socket: TypedSocket = io(getSocketUrl(), {
   reconnectionAttempts: 10,
   reconnectionDelay: 1000,
   reconnectionDelayMax: 5000,
-  transports: ['websocket', 'polling'],
+  transports: ["websocket", "polling"],
 });
 
 /**
@@ -72,8 +72,11 @@ export const disconnectSocket = (): void => {
  * Возвращает false, если сокет не подключён
  */
 export const sendPing = (
-  message = 'ping',
-  onSuccess?: (response: PongPayload | string | undefined, roundTripMs: number) => void,
+  message = "ping",
+  onSuccess?: (
+    response: PongPayload | string | undefined,
+    roundTripMs: number,
+  ) => void,
   onError?: (error: Error) => void,
 ): boolean => {
   if (!socket.connected) {

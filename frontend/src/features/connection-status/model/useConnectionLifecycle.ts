@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
 import {
   connectSocket,
@@ -8,9 +8,9 @@ import {
   sendPing,
   socket,
   SOCKET_EVENTS,
-} from '@/shared/api';
+} from "@/shared/api";
 
-import { useConnectionStore } from './useConnectionStore';
+import { useConnectionStore } from "./useConnectionStore";
 
 export interface UseConnectionLifecycleOptions {
   autoConnect?: boolean;
@@ -30,42 +30,45 @@ export function initSocketListeners(): void {
   const { setStatus, setLastError } = useConnectionStore.getState();
 
   const handleConnect = () => {
-    setStatus('connected');
+    setStatus("connected");
     setLastError(null);
   };
 
   const handleDisconnect = (reason: string) => {
-    if (reason === 'io client disconnect' || reason === 'io server disconnect') {
-      setStatus('disconnected');
+    if (
+      reason === "io client disconnect" ||
+      reason === "io server disconnect"
+    ) {
+      setStatus("disconnected");
     } else {
-      setStatus('reconnecting');
+      setStatus("reconnecting");
     }
   };
 
   const handleConnectError = (error: Error) => {
-    const message = error.message || 'Ошибка подключения к серверу WebSocket';
+    const message = error.message || "Ошибка подключения к серверу WebSocket";
     setLastError(message);
 
     // Если менеджер Socket.IO продолжает попытки реконнекта, не мигаем красным 'error'
     if (socket.active) {
-      setStatus('reconnecting');
+      setStatus("reconnecting");
     } else {
-      setStatus('error');
+      setStatus("error");
     }
   };
 
   const handleReconnectAttempt = () => {
-    setStatus('reconnecting');
+    setStatus("reconnecting");
   };
 
   const handleReconnect = () => {
-    setStatus('connected');
+    setStatus("connected");
     setLastError(null);
   };
 
   const handleReconnectFailed = () => {
-    setStatus('error');
-    setLastError('Не удалось подключиться к серверу после нескольких попыток');
+    setStatus("error");
+    setLastError("Не удалось подключиться к серверу после нескольких попыток");
   };
 
   socket.on(SOCKET_EVENTS.CONNECT, handleConnect);
@@ -77,7 +80,7 @@ export function initSocketListeners(): void {
   socket.io.on(SOCKET_EVENTS.RECONNECT_FAILED, handleReconnectFailed);
 
   if (socket.connected) {
-    setStatus('connected');
+    setStatus("connected");
   }
 
   detachListeners = () => {
@@ -102,17 +105,17 @@ export function cleanupSocketListeners(): void {
 const connectionActions = {
   connect(): void {
     const { setStatus, setLastError } = useConnectionStore.getState();
-    setStatus('connecting');
+    setStatus("connecting");
     setLastError(null);
     connectSocket();
   },
 
   disconnect(): void {
     disconnectSocket();
-    useConnectionStore.getState().setStatus('disconnected');
+    useConnectionStore.getState().setStatus("disconnected");
   },
 
-  triggerPing(message = 'ping'): void {
+  triggerPing(message = "ping"): void {
     const { isPinging, setIsPinging, setPingLatency, setPingError } =
       useConnectionStore.getState();
     if (isPinging) {
@@ -129,13 +132,13 @@ const connectionActions = {
         setIsPinging(false);
       },
       (error) => {
-        setPingError(error.message || 'Таймаут ответа ping');
+        setPingError(error.message || "Таймаут ответа ping");
         setIsPinging(false);
       },
     );
 
     if (!sent) {
-      setPingError('Сокет не подключён');
+      setPingError("Сокет не подключён");
       setIsPinging(false);
     }
   },

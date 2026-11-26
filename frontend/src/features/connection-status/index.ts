@@ -1,7 +1,7 @@
-export { ConnectionStatusBanner } from './ui/connection-status-banner';
-export type { ConnectionStatusBannerProps } from './ui/connection-status-banner';
+export { ConnectionStatusBanner } from "./ui/connection-status-banner";
+export type { ConnectionStatusBannerProps } from "./ui/connection-status-banner";
 
-export { useConnectionActions } from './model/useConnectionLifecycle';
+export { useConnectionActions } from "./model/useConnectionLifecycle";
 
 export {
   useConnectionError,
@@ -10,5 +10,5 @@ export {
   useIsPinging,
   usePingError,
   usePingLatency,
-} from './model/useConnectionStore';
-export type { ConnectionStatus } from './model/useConnectionStore';
+} from "./model/useConnectionStore";
+export type { ConnectionStatus } from "./model/useConnectionStore";

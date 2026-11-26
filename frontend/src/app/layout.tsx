@@ -5,7 +5,8 @@ import { ConnectionStatusBanner } from "@/features/connection-status";
 
 export const metadata: Metadata = {
   title: "Robot Warehouse — Диспетчерская склада",
-  description: "Платформа управления роботами на симулируемом складе в реальном времени",
+  description:
+    "Платформа управления роботами на симулируемом складе в реальном времени",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
