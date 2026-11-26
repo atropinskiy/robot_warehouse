@@ -12,5 +12,7 @@ export {
 export { Heading } from "./heading";
 export { Input } from "./input";
 export { Label } from "./label";
+export { PagePlaceholder } from "./page-placeholder";
+export { SectionHeader } from "./section-header";
 export { HStack, VStack } from "./stack";
 export { Text } from "./text";
