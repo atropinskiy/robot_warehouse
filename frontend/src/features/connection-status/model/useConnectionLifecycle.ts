@@ -16,7 +16,6 @@ export interface UseConnectionLifecycleOptions {
   autoConnect?: boolean;
 }
 
-let activeSubscribers = 0;
 let detachListeners: (() => void) | null = null;
 
 /**
@@ -150,24 +149,20 @@ export function useConnectionActions() {
 }
 
 /**
- * Инициализирует слушатели сокета при монтировании и корректно отписывается при размонтировании последнего подписчика.
+ * Инициализирует слушатели сокета при монтировании корневого провайдера/баннера и отписывается при размонтировании.
  */
 export function useConnectionLifecycle({
   autoConnect = true,
 }: UseConnectionLifecycleOptions = {}) {
   useEffect(() => {
-    activeSubscribers += 1;
     initSocketListeners();
 
-    if (autoConnect && !socket.connected) {
+    if (autoConnect && !socket.connected && !socket.active) {
       connectionActions.connect();
     }
 
     return () => {
-      activeSubscribers = Math.max(0, activeSubscribers - 1);
-      if (activeSubscribers === 0) {
-        cleanupSocketListeners();
-      }
+      cleanupSocketListeners();
     };
   }, [autoConnect]);
 
