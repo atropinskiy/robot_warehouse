@@ -12,6 +12,17 @@ import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { UserEntity } from './entities/user.entity';
 
+const USER_SELECT = {
+  id: true,
+  email: true,
+  name: true,
+  role: true,
+  isActive: true,
+  tokenVersion: true,
+  createdAt: true,
+  updatedAt: true,
+} as const;
+
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger(AuthService.name);
@@ -22,10 +33,8 @@ export class AuthService {
     private configService: ConfigService,
   ) {}
 
-  async register(registerDto: RegisterDto): Promise<UserEntity> {
+  async register(registerDto: RegisterDto) {
     const { email, password, name } = registerDto;
-
-    // console.log('  ----> ', email, password, name);
 
     // Проверяем, существует ли активный пользователь с таким email
     const existingUser = await this.dbService.user.findFirst({
@@ -49,42 +58,43 @@ export class AuthService {
         name,
         password: hashedPassword,
       },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        role: true,
-        isActive: true,
-        createdAt: true,
-        updatedAt: true,
-      },
+      select: USER_SELECT,
     });
 
-    return user;
+    // Сразу выпускаем токены, без повторного запроса в БД и проверки bcrypt
+    const tokens = this.generateTokens(user.id, user.email, user.tokenVersion);
+
+    return {
+      user,
+      ...tokens,
+    };
   }
 
   async login(loginDto: LoginDto) {
-    // Находим пользователя
+    const { email, password } = loginDto;
+
     const user = await this.dbService.user.findUnique({
-      where: { email: loginDto.email },
+      where: { email },
     });
 
-    if (!user) {
+    // Timing-safe: если пользователь не найден, всё равно выполняем bcrypt,
+    // чтобы время ответа не выдавало, зарегистрирован ли email.
+    const passwordHash = user?.password ?? DUMMY_HASH;
+    const isPasswordValid = await compare(password, passwordHash);
+
+    if (!user || !isPasswordValid) {
       throw new UnauthorizedException('Неверный email или пароль');
     }
 
-    // Проверяем пароль
-    const isPasswordValid = await compare(loginDto.password, user.password);
-
-    if (!isPasswordValid) {
-      throw new UnauthorizedException('Неверный email или пароль');
+    // Деактивированный пользователь не может войти
+    if (!user.isActive) {
+      throw new UnauthorizedException('Аккаунт деактивирован');
     }
 
-    // Генерируем токены
-    const tokens = this.generateTokens(user.id, user.email);
+    const tokens = this.generateTokens(user.id, user.email, user.tokenVersion);
 
-    // Возвращаем данные пользователя (без пароля) и токены
-    const { password: _, ...userWithoutPassword } = user;
+    const { password: _password, ...userWithoutPassword } = user;
+    void _password;
 
     return {
       user: userWithoutPassword,
@@ -92,8 +102,8 @@ export class AuthService {
     };
   }
 
-  generateTokens(userId: number, email: string) {
-    const payload = { sub: userId, email };
+  generateTokens(userId: number, email: string, tokenVersion: number) {
+    const payload = { sub: userId, email, ver: tokenVersion };
 
     // Access токен на 1 минуту
     const accessToken = this.jwtService.sign(
@@ -121,14 +131,13 @@ export class AuthService {
     };
   }
 
-  async refreshTokens(userId: number, email: string) {
-    const tokens = this.generateTokens(userId, email);
-
-    // Проверяем, что пользователь существует
+  async refreshTokens(userId: number) {
     const user = await this.validateUser(userId);
     if (!user) {
       throw new UnauthorizedException('Пользователь не найден');
     }
+
+    const tokens = this.generateTokens(user.id, user.email, user.tokenVersion);
 
     return {
       user,
@@ -136,18 +145,48 @@ export class AuthService {
     };
   }
 
+  /**
+   * Отзывает все выданные refresh-токены пользователя, увеличивая tokenVersion.
+   * Старые токены (с меньшим ver) перестают проходить валидацию.
+   */
+  async revokeRefreshTokens(userId: number): Promise<void> {
+    await this.dbService.user.update({
+      where: { id: userId },
+      data: { tokenVersion: { increment: 1 } },
+    });
+  }
+
+  /**
+   * Отзывает refresh-токены по самому токену (для logout без guard).
+   * Подпись проверяется, но срок действия игнорируется — logout должен работать
+   * даже после истечения access-токена.
+   */
+  async revokeByRefreshToken(refreshToken: string | undefined): Promise<void> {
+    if (!refreshToken) {
+      return;
+    }
+
+    try {
+      const payload = this.jwtService.verify<{ sub?: number }>(refreshToken, {
+        secret:
+          this.configService.get<string>('JWT_REFRESH_SECRET') ||
+          this.configService.get<string>('JWT_SECRET') ||
+          'your-secret-key',
+        ignoreExpiration: true,
+      });
+
+      if (payload?.sub) {
+        await this.revokeRefreshTokens(payload.sub);
+      }
+    } catch {
+      // Невалидный токен — отзывать нечего.
+    }
+  }
+
   async validateUser(userId: number): Promise<UserEntity | null> {
     const user = await this.dbService.user.findUnique({
       where: { id: userId },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        role: true,
-        isActive: true,
-        createdAt: true,
-        updatedAt: true,
-      },
+      select: USER_SELECT,
     });
 
     // Проверяем, что пользователь активен
@@ -158,3 +197,8 @@ export class AuthService {
     return user;
   }
 }
+
+// Хеш от случайной строки — используется для выравнивания времени ответа,
+// когда пользователь с таким email не найден.
+const DUMMY_HASH =
+  '$2b$10$wQO3nWfFzgFt71P9KQJw.OgkKcv0pYO81qrNi2tTODTk6ToZT452S';

@@ -4,6 +4,7 @@ export class UserEntity {
   email: string;
   role: 'VIEWER' | 'OWNER';
   isActive: boolean;
+  tokenVersion: number;
   createdAt: Date;
   updatedAt: Date;
 }

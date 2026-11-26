@@ -27,7 +27,12 @@ export class JwtRefreshStrategy extends PassportStrategy(
     });
   }
 
-  async validate(payload: { sub: number; email: string; type: string }) {
+  async validate(payload: {
+    sub: number;
+    email: string;
+    type: string;
+    ver?: number;
+  }) {
     if (payload.type !== 'refresh') {
       throw new UnauthorizedException('Неверный тип токена');
     }
@@ -40,6 +45,7 @@ export class JwtRefreshStrategy extends PassportStrategy(
         name: true,
         role: true,
         isActive: true,
+        tokenVersion: true,
         createdAt: true,
         updatedAt: true,
       },
@@ -52,6 +58,11 @@ export class JwtRefreshStrategy extends PassportStrategy(
     // Проверяем, что аккаунт активен
     if (!user.isActive) {
       throw new UnauthorizedException('Аккаунт деактивирован');
+    }
+
+    // Refresh-токен выпущен до последнего отзыва (logout) — считаем его недействительным
+    if (payload.ver !== undefined && payload.ver !== user.tokenVersion) {
+      throw new UnauthorizedException('Токен устарел');
     }
 
     return user;
