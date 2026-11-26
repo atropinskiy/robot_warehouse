@@ -8,11 +8,7 @@ export const metadata: Metadata = {
   description: "Платформа управления роботами на симулируемом складе в реальном времени",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="ru" className="dark h-full antialiased">
       <body className="min-h-full flex flex-col bg-background text-foreground">
